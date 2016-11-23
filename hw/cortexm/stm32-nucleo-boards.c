@@ -26,6 +26,60 @@
  * This file defines several STM32 Nucleo boards.
  */
 
+/* ----- ST NUCLEO-F030R8 ----- */
+
+static GPIOLEDInfo nucleo_f030r8_leds_info[] = {
+    {
+        .name = "green-led",
+        .active_low = false,
+        .colour_message = "Green",
+        .x = 277,
+        .y = 271,
+        .w = 8,
+        .h = 6,
+        .gpio_path = "/machine/mcu/stm32/gpio[a]",
+        .port_bit = 5, },
+    { }, /**/
+};
+
+static void nucleo_f030r8_board_init_callback(MachineState *machine)
+{
+    CortexMBoardState *board = CORTEXM_BOARD_STATE(machine);
+
+    cortexm_board_greeting(board);
+
+    {
+        /* Create the MCU */
+        Object *mcu = cm_object_new_mcu(machine, TYPE_STM32F030R8);
+
+        /* The board has no oscillators. */
+        cm_object_property_set_int(mcu, 0, "hse-freq-hz"); /* N/A */
+        cm_object_property_set_int(mcu, 0, "lse-freq-hz"); /* N/A */
+
+        cm_object_realize(mcu);
+    }
+
+    cortexm_board_init_graphic_image(board, "NUCLEO-F103RB.jpg");
+
+    Object *peripheral = cm_container_get_peripheral();
+    gpio_led_create_from_info(peripheral, nucleo_f030r8_leds_info,
+            &(board->graphic_context));
+}
+
+static void nucleo_f030r8_board_class_init_callback(ObjectClass *oc, void *data)
+{
+    MachineClass *mc = MACHINE_CLASS(oc);
+
+    mc->desc = "ST Nucleo Development Board for STM32 F0 series";
+    mc->init = nucleo_f030r8_board_init_callback;
+}
+
+static const TypeInfo nucleo_f030r8_machine = {
+    .name = BOARD_TYPE_NAME("NUCLEO-F030R8"),
+    .parent = TYPE_CORTEXM_BOARD,
+    .class_init = nucleo_f030r8_board_class_init_callback };
+
+
 /* ----- ST NUCLEO-F103RB ----- */
 
 static GPIOLEDInfo nucleo_f103rb_leds_info[] = {
@@ -170,6 +224,7 @@ static void nucleo_f334r8_board_init_callback(MachineState *machine)
 /* ----- Boards inits ----- */
 static void stm32_machines_init(void)
 {
+    type_register_static(&nucleo_f030r8_machine);
     type_register_static(&nucleo_f103rb_machine);
     type_register_static(&nucleo_f411re_machine);
 #if 0

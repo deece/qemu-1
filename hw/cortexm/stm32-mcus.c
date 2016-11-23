@@ -91,6 +91,51 @@
  * I = 2048K
  */
 
+static const STM32Capabilities stm32f030x8 = {
+
+    .family = STM32_FAMILY_F0,
+
+    .hsi_freq_hz = 8000000,
+    .lsi_freq_hz = 40000,
+    .has_rcc = true,
+    .has_pwr = true,
+    .has_rtc = true,
+    .num_back_bytes = 20,
+    .has_periph_bitband = true,
+
+    .has_crc = true,
+    .has_exti = true,
+    .has_dma1 = true,
+    .num_dma1 = 7,
+    .has_ac_tim1 = true,
+    .has_gp_tim2 = true,
+    .has_gp_tim3 = true,
+    .has_gp_tim4 = true,
+    .has_iwdg = true,
+    .has_wwdg = true,
+    .has_i2c1 = true,
+    .has_i2c2 = true,
+#if 0
+    .has_usart1 = true, /* 4.5Mb/s */
+    .has_usart2 = true, /* 2.25 Mb/s */
+    .has_usart3 = true, /* 2.25 Mb/s */
+#endif
+    .has_spi1 = true,
+    .has_spi2 = true,
+    .has_usb_fs = true,
+
+    .has_gpioa = true,
+    .has_gpiob = true,
+    .has_gpioc = true,
+    .has_gpiod = true,
+    .has_gpioe = true,
+
+    .has_adc1 = true, /* 12-bits, 16-ch */
+    .has_adc2 = true, /* 12-bits, 16-ch */
+
+    .has_ts = 1, /* ADC12_IN16 */
+};
+
 static const STM32Capabilities stm32f103x8b = {
 
     .family = STM32_FAMILY_F1,
@@ -582,13 +627,14 @@ static const STM32Capabilities stm32f429xx = {
 
 /* ------------------------------------------------------------------------- */
 
-#if 0
 static const CortexMCoreCapabilities stm32f0xx_core = {
     .cpu_model = "cortex-m0",
-    .has_mpu = false, /* itm? irqs? */
+    .has_mpu = false, /* itm? */
+	.num_irq = 32,
     .nvic_bits = 4, /**/
 };
 
+#if 0
 static const CortexMCoreCapabilities stm32f100_core = {
     .cpu_model = "cortex-m3",
     .has_mpu = true,
@@ -692,6 +738,15 @@ static const STM32PartInfo stm32_mcus[] = {
         }, /**/
     },
 #endif
+    {
+        .name = TYPE_STM32F030R8,
+        .cortexm = {
+            .flash_size_kb = 64,
+            .sram_size_kb = 8,
+            .core = &stm32f0xx_core, /**/
+        },
+        .stm32 = &stm32f030x8, /**/
+    },
     {
         .name = TYPE_STM32F103RB, /* STM32F103x[8B] */
         .cortexm = {

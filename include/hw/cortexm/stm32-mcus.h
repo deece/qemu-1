@@ -30,6 +30,7 @@
  * For compatibility with some development tools, it is
  * strongly recommended to use the CMSIS names.
  */
+#define TYPE_STM32F030R8 "STM32F030R8"
 #define TYPE_STM32F051R8 "STM32F051R8"
 #define TYPE_STM32F100RB "STM32F100RB"
 #define TYPE_STM32F103RB "STM32F103RB"
